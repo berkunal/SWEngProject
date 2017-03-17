@@ -75,24 +75,23 @@ class Menu extends JFrame {
 						null, selectionValues,
 						selectionValues[4]);
 
-				int x = frameBoundX, y = frameBoundY;
 				if (Objects.equals(selectionValues[0], selection)) {
-					x = 1920;
-					y = 1080;
+					frameBoundX = 1920;
+					frameBoundY = 1080;
 				} else if (Objects.equals(selectionValues[1], selection)) {
-					x = 1600;
-					y = 900;
+					frameBoundX = 1600;
+					frameBoundY = 900;
 				} else if (Objects.equals(selectionValues[2], selection)) {
-					x = 1366;
-					y = 768;
+					frameBoundX = 1366;
+					frameBoundY= 768;
 				} else if (Objects.equals(selectionValues[3], selection)) {
-					x = 1280;
-					y = 720;
+					frameBoundX = 1280;
+					frameBoundY = 720;
 				} else if (Objects.equals(selectionValues[4], selection)) {
-					x = 960;
-					y = 540;
+					frameBoundX = 960;
+					frameBoundY = 540;
 				}
-				resetLoginUI(x, y, f, loginPanel, logoLabel,
+				resetLoginUI(frameBoundX, frameBoundY, f, loginPanel, logoLabel,
 						usernameTextField,
 						passwordTextField,
 						signInButton,
