@@ -22,6 +22,7 @@ class Menu extends JFrame {
 
 	public Menu() {
 		// TODO Auto-generated constructor stub
+		
 		JFrame f = new JFrame("Geotrix");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -53,8 +54,9 @@ class Menu extends JFrame {
 				loginPanel.setVisible(false);
 				f.remove(loginPanel);
 				// call game panel
-				JPanel gamePanel = new Game();
-				f.add(gamePanel);
+				JPanel difficultyPanel = new Difficulty(f, frameBoundX, frameBoundY);
+				difficultyPanel.setLayout(null);
+				f.add(difficultyPanel);
 			}
 		});
 
