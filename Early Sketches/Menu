@@ -1,0 +1,248 @@
+package com.tutorial.main;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import com.tutorial.main.Game.STATE;
+
+public class Menu extends MouseAdapter {
+	
+	
+	private Game game;
+	
+	private Handler handler;
+	
+	private HUD hud;
+	
+	public Menu(Game game, Handler handler, HUD hud){
+		
+		this.game = game;
+		this.handler = handler;
+		this.hud = hud;
+		
+	}
+	
+	
+	public void mousePressed(MouseEvent e){
+		
+		int mx = e.getX();
+		int my = e.getY();
+		
+		
+		if(game.gameState == STATE.Menu){
+			
+			//play button
+			if(mouseOver(mx, my, (game.WIDTH-200)/2, 350, 200, 64)){
+				
+				game.gameState = STATE.Game;
+				handler.clearEnemys();
+	/////		//OYUN BAŞLANGIÇ SPAWN LARI BURADA!!!!!!!!!!!!!!!!
+				
+					handler.addObject(new Player(300,300, ID.Player, handler, game)); //where the player start
+					//handler.addObject(new Player(100,150, ID.Player, handler)); //you can create another one
+				
+					handler.addObject(new Enemy1(100,100, ID.Enemy, handler));
+					handler.addObject(new Enemy1(200,100, ID.Enemy, handler));
+					handler.addObject(new Enemy1(300,100, ID.Enemy, handler));
+					handler.addObject(new Enemy1(400,100, ID.Enemy, handler)); 
+				
+					/*r = new Random();
+				
+					for(int i=0; i<10; i++){
+					
+					handler.addObject(new Enemy1(r.nextInt(WIDTH),50, ID.Enemy));
+					
+					}*/
+				
+					//handler.addObject(new Player(300,200, ID.Player2));
+				
+					handler.addObject(new BasicEnemy(300,50, ID.BasicEnemy, handler));
+					handler.addObject(new BasicEnemy(150,50, ID.BasicEnemy, handler));
+					handler.addObject(new BasicEnemy(380,50, ID.BasicEnemy, handler));
+					handler.addObject(new BasicEnemy(450,50, ID.BasicEnemy, handler));
+					
+				
+			}
+			
+			//help button
+			if(mouseOver(mx, my, (game.WIDTH-200)/2, 450, 200, 64)){
+						
+				game.gameState = STATE.Help;
+						
+			}
+			
+			
+			//quit button
+			if(mouseOver(mx, my, (game.WIDTH-200)/2, 550, 200, 64)){
+						
+				System.exit(1);					
+			}
+			
+			
+		}
+		
+		
+		
+		
+		//back button for help
+		if(game.gameState == STATE.Help){
+					
+			if(mouseOver(mx, my, (game.WIDTH-200)/2, 650, 200, 64)){
+						
+				game.gameState = STATE.Menu;
+				return;
+								
+			}
+		}
+		
+		
+		if(game.gameState == STATE.End){
+			
+			if(mouseOver(mx, my, 210, 300, 200, 64)){
+						
+				game.gameState = STATE.Game;
+				handler.clearEnemys();
+				hud.setScore(0);
+				hud.setLevel(1);
+				hud.greenValue = 255;
+				hud.redValue = 75;
+				
+
+				handler.addObject(new Player(300,300, ID.Player, handler, game)); //where the player start
+				//handler.addObject(new Player(100,150, ID.Player, handler)); //you can create another one
+			
+				handler.addObject(new Enemy1(100,100, ID.Enemy, handler));
+				handler.addObject(new Enemy1(200,100, ID.Enemy, handler));
+				handler.addObject(new Enemy1(300,100, ID.Enemy, handler));
+				handler.addObject(new Enemy1(400,100, ID.Enemy, handler)); 
+			
+				/*r = new Random();
+			
+				for(int i=0; i<10; i++){
+				
+				handler.addObject(new Enemy1(r.nextInt(WIDTH),50, ID.Enemy));
+				
+				}*/
+			
+				//handler.addObject(new Player(300,200, ID.Player2));
+			
+				handler.addObject(new BasicEnemy(300,50, ID.BasicEnemy, handler));
+								
+			}
+		}
+		
+		
+		
+		
+	}
+	
+	
+	public void mouseReleased(MouseEvent e){
+		
+		
+	}
+
+	
+	private boolean mouseOver(int mx, int my, int x, int y, int width, int height){
+		
+		if( mx > x && mx < x + width){
+			if( my > y && my < y + height){
+				return true;
+			}else return false;			
+		}else return false;
+		
+	}
+	
+	
+	
+	public void tick(){
+		
+		
+		
+	}
+	
+	
+	public void render(Graphics g){
+		
+		
+		if(game.gameState == STATE.Menu){
+			
+						
+			
+			Font fnt = new Font("arial", 1, 60);
+			Font fnt2 = new Font("arial", 1, 35);
+			
+			g.setFont(fnt);
+			g.setColor(Color.white);
+			g.drawString("MENU", (game.WIDTH-175)/2, 230);
+			
+			
+			g.setFont(fnt2);
+			
+			
+			g.drawRect((game.WIDTH-200)/2, 350, 200, 64);		
+			g.drawString("Play", 475, 395);
+			
+			//g.setColor(Color.white);
+			g.drawRect((game.WIDTH-200)/2, 450, 200, 64);
+			g.drawString("Help", 475, 495);
+			
+			//g.setColor(Color.white);
+			g.drawRect((game.WIDTH-200)/2, 550, 200, 64);
+			g.drawString("Quit", 475, 595);
+			
+		}else if (game.gameState == STATE.Help){
+			
+			Font fnt = new Font("arial", 1, 60);
+			Font fnt2 = new Font("arial", 1, 35);
+			Font fnt3 = new Font("arial", 1, 20);
+			
+			g.setFont(fnt);
+			g.setColor(Color.white);
+			g.drawString("Help", 450, 150);
+			
+			g.setFont(fnt3);
+			g.drawString("- Use ARROW keys to move space ship" , 350, 250);
+			g.setFont(fnt3);
+			g.drawString("  and dodge enemies." , 350, 280);		
+			g.setFont(fnt3);
+			g.drawString("- Use SPACE key to strike enemies.", 350, 325);
+			
+			g.setFont(fnt3);
+			g.drawString("(Onur Akdeniz-20140702013)", 350, 375);
+			
+			g.setFont(fnt2);
+			g.drawRect((game.WIDTH-200)/2, 650, 200, 64);
+			g.drawString("Back", 475, 695);
+			
+		}else if (game.gameState == STATE.End){
+			
+			Font fnt = new Font("arial", 1, 50);
+			Font fnt2 = new Font("arial", 1, 35);
+			Font fnt3 = new Font("arial", 1, 20);
+			
+			g.setFont(fnt);
+			g.setColor(Color.white);
+			g.drawString("Game Over !", 180, 120);
+			
+			
+			g.setFont(fnt3);
+			g.drawString("You lost with a score of:   "+ hud.getScore() , 100, 200);		
+			
+			
+			g.setFont(fnt2);
+			g.drawRect(210, 300, 200, 64);
+			g.drawString("Try Again", 230, 345);
+			
+		}
+		
+		
+		
+		
+	}
+	
+	
+}
