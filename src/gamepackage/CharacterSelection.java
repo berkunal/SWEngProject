@@ -22,9 +22,8 @@ class CharacterSelection extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 				f.getContentPane().removeAll();
-				JPanel gamePanel = new Game(f, frameBoundX, frameBoundY);
-				gamePanel.setLayout(null);
-				f.add(gamePanel);
+				f.setVisible(false);
+				JFrame gamePanel = new Game(frameBoundX, frameBoundY);
 			}
 		});
 
