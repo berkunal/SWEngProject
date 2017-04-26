@@ -11,7 +11,7 @@ class CharacterSelection extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	public CharacterSelection(JFrame f, int frameBoundX, int frameBoundY) {
+	public CharacterSelection(JFrame f, int frameBoundX, int frameBoundY,int difficulty) {
 		
 		setBounds(0,0,frameBoundX, frameBoundY);
 
