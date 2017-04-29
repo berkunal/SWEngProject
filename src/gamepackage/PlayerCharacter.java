@@ -1,6 +1,7 @@
 package gamepackage;
 
 import java.awt.Color;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JLabel;
 
@@ -10,12 +11,15 @@ class PlayerCharacter extends JLabel {
 	private int positionX, positionY;
 	private int frameBoundX, frameBoundy;
 	private int speed;
+	private int verticalSpeed = 0;
 	private boolean left = false;
 	private boolean up = false;
 	private boolean right = false;
 	private boolean down = false;
 	private boolean attacking = false;
+	private boolean jumping = false;
 	private int health = 100;
+	final int GRAVITY = 7;
 
 	public PlayerCharacter(int frameBoundX, int frameBoundY) {
 		// TODO Auto-generated constructor stub
@@ -23,8 +27,9 @@ class PlayerCharacter extends JLabel {
 		this.positionY = frameBoundY-250;
 		this.frameBoundX = frameBoundX;
 		this.frameBoundy = frameBoundY;
-		setBounds(positionX, positionY, 150, 200);//the heigh will differ, can get as parameters
-		setBackground(Color.black);
+		setBounds(positionX, positionY, 150, 200);//the height will differ, can get as parameters
+		setBackground(Color.cyan);
+		setText("Player");
 		setOpaque(true);
 		speed = 3;
 	}
@@ -50,18 +55,72 @@ class PlayerCharacter extends JLabel {
 		//player moving right
 		if (right) {
 			if(positionX < frameBoundX -25 - 150){
-				positionX += speed;
-				setBounds(positionX, positionY, 150, 200);
+				for (int i = speed; i > 0; i--) {
+					positionX++;
+					setBounds(positionX, positionY, 150, 200);
+				}
 			}	
 		}
 		//player moving left
 		if (left) {
 			if(positionX > 25){
-				positionX -= speed;
-				setBounds(positionX, positionY, 150, 200);
+				for (int i = speed; i > 0; i--) {
+					positionX--;
+					setBounds(positionX, positionY, 150, 200);
+				}
 			}
 				
 		}
-
+		//jumping
+		if (up && !jumping) {
+			jumping = true;//to make sure that there is only one jumping action
+			//Jumping occurs in another thread
+			Thread jumpingThread = new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					//going upwards
+					verticalSpeed = 100;
+					
+					for (int i = verticalSpeed; i > 0; i--) {
+						positionY--;
+						setBounds(positionX, positionY, 150, 200);
+						try {
+							TimeUnit.MILLISECONDS.sleep(2);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					//falling			
+					for (int i = verticalSpeed; i > 0; i--) {
+						positionY++;
+						setBounds(positionX, positionY, 150, 200);
+						try {
+							TimeUnit.MILLISECONDS.sleep(2);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					try {
+						TimeUnit.MILLISECONDS.sleep(4);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					jumping = false;
+				}
+			});
+			jumpingThread.start();
+			
+		}
+		//crouching
+		if (down) {
+			setBounds(positionX, positionY+100, 175, 100);	
+		}
+		if (!down) {
+			setBounds(positionX, positionY, 150, 200);	
+		}
 	}
 }

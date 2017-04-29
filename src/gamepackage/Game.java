@@ -15,6 +15,7 @@ class Game extends JFrame implements Runnable, KeyListener {
 	private Icon img;
 	private JLabel healthbarLabelPlayer;
 	private PlayerCharacter player;
+	private EnemyCharacter enemy;
 	private JFrame f;
 	
 	private boolean running = false;
@@ -27,7 +28,7 @@ class Game extends JFrame implements Runnable, KeyListener {
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//background
-		img = new ImageIcon(getClass().getResource("bg.jpg"));
+		img = new ImageIcon(getClass().getResource("ArkaPlan.jpg"));
 		JLabel contentPane = new JLabel();
 		contentPane.setIcon( img );
 		contentPane.setLayout( null );
@@ -36,29 +37,34 @@ class Game extends JFrame implements Runnable, KeyListener {
 		
 		int g = (frameBoundX - 260)/2;
 		//healthbar for Player
-		healthbarLabelPlayer = new JLabel();
+		healthbarLabelPlayer = new JLabel("HealthBar1");
 		healthbarLabelPlayer.setBounds(50, 50, g, 50);
-		healthbarLabelPlayer.setBackground(Color.black);
+		healthbarLabelPlayer.setBackground(Color.red);
 		healthbarLabelPlayer.setOpaque(true);
 		f.add(healthbarLabelPlayer);
 		
 		//healtbar2
-		JLabel  healtbarLabelEnemy = new JLabel();
-		healtbarLabelEnemy.setBounds(g + 210, 50, g, 50);
-		healtbarLabelEnemy.setBackground(Color.black);
-		healtbarLabelEnemy.setOpaque(true);
-		f.add(healtbarLabelEnemy);
+		JLabel  healthbarLabelEnemy = new JLabel("HealthBar2");
+		healthbarLabelEnemy.setBounds(g + 210, 50, g, 50);
+		healthbarLabelEnemy.setBackground(Color.red);
+		healthbarLabelEnemy.setOpaque(true);
+		f.add(healthbarLabelEnemy);
 		
 		
 		//timePanel
-		JLabel  timePanel = new JLabel();
+		JLabel  timePanel = new JLabel("Time");
 		timePanel.setBounds(g + 80, 30, 100, 100);
-		timePanel.setBackground(Color.black);
+		timePanel.setBackground(Color.white);
 		timePanel.setOpaque(true);
 		f.add(timePanel);
 		
+		//Player Label
 		player = new PlayerCharacter(frameBoundX, frameBoundY);
 		f.add(player);
+		
+		//Enemy Label
+		enemy = new EnemyCharacter(frameBoundX, frameBoundY);
+		f.add(enemy);
 		
 		f.setSize(frameBoundX, frameBoundY);
 		f.setResizable(false);
@@ -76,6 +82,7 @@ class Game extends JFrame implements Runnable, KeyListener {
 		running = true;
 		while (running) {
 			player.update();
+			enemy.update();
 			f.revalidate();
 			f.repaint();
 			try {
@@ -126,6 +133,12 @@ class Game extends JFrame implements Runnable, KeyListener {
 		}
 		if(keyCode == KeyEvent.VK_SPACE){
 			player.setAttacking(false);
+		}
+		if(keyCode == KeyEvent.VK_ESCAPE) {
+			setVisible(false);
+			f.getContentPane().removeAll();
+			f.setVisible(false);
+			new Menu();
 		}
 		
 	}
