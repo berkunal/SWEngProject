@@ -14,8 +14,8 @@ class Game extends JFrame implements Runnable, KeyListener {
 	private static final long serialVersionUID = 1L;
 	private Icon img;
 	private JLabel healthbarLabelPlayer;
-	private PlayerCharacter player;
-	private EnemyCharacter enemy;
+	private static PlayerCharacter player;
+	private static EnemyCharacter enemy;
 	private JFrame f;
 	
 	private boolean running = false;
@@ -65,6 +65,8 @@ class Game extends JFrame implements Runnable, KeyListener {
 		//Enemy Label
 		enemy = new EnemyCharacter(frameBoundX, frameBoundY);
 		f.add(enemy);
+		
+		player.setEnemy(enemy);
 		
 		f.setSize(frameBoundX, frameBoundY);
 		f.setResizable(false);

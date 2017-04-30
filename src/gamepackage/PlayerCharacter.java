@@ -19,7 +19,7 @@ class PlayerCharacter extends JLabel {
 	private boolean attacking = false;
 	private boolean jumping = false;
 	private int health = 100;
-	final int GRAVITY = 7;
+	private EnemyCharacter enemy;
 
 	public PlayerCharacter(int frameBoundX, int frameBoundY) {
 		// TODO Auto-generated constructor stub
@@ -50,14 +50,35 @@ class PlayerCharacter extends JLabel {
 	public void setAttacking(boolean b){
 		this.attacking = b;
 	}
+	public void setEnemy(EnemyCharacter enemy){
+		this.enemy = enemy;
+	}
 	
+	//Getter methods
+	public int getpositionX(){
+		return positionX;
+	}
+	public int getpositionY(){
+		return positionY;
+	}
+
+	private boolean collision () {
+		int enemyX = enemy.getpositionX();
+		int w = (down) ? 175 :150 ;
+		if ( positionX + w > enemyX) {//depends on width
+			return true;
+		}
+		return false;
+	}
+	
+	//update method, used at moving the object
 	public void update() {
 		//player moving right
-		if (right) {
-			if(positionX < frameBoundX -25 - 150){
+		if (right && !collision()) {
+			if(positionX < frameBoundX -25 - 150){//depends on height
 				for (int i = speed; i > 0; i--) {
 					positionX++;
-					setBounds(positionX, positionY, 150, 200);
+					setBounds(positionX, positionY, 150, 200);//depends on height
 				}
 			}	
 		}
@@ -66,7 +87,7 @@ class PlayerCharacter extends JLabel {
 			if(positionX > 25){
 				for (int i = speed; i > 0; i--) {
 					positionX--;
-					setBounds(positionX, positionY, 150, 200);
+					setBounds(positionX, positionY, 150, 200);//depends on height
 				}
 			}
 				
@@ -84,7 +105,7 @@ class PlayerCharacter extends JLabel {
 					
 					for (int i = verticalSpeed; i > 0; i--) {
 						positionY--;
-						setBounds(positionX, positionY, 150, 200);
+						setBounds(positionX, positionY, 150, 200);//depends on height
 						try {
 							TimeUnit.MILLISECONDS.sleep(2);
 						} catch (InterruptedException e) {
@@ -95,7 +116,7 @@ class PlayerCharacter extends JLabel {
 					//falling			
 					for (int i = verticalSpeed; i > 0; i--) {
 						positionY++;
-						setBounds(positionX, positionY, 150, 200);
+						setBounds(positionX, positionY, 150, 200);//depends on height
 						try {
 							TimeUnit.MILLISECONDS.sleep(2);
 						} catch (InterruptedException e) {
@@ -117,10 +138,19 @@ class PlayerCharacter extends JLabel {
 		}
 		//crouching
 		if (down) {
-			setBounds(positionX, positionY+100, 175, 100);	
+			setBounds(positionX, positionY+100, 175, 100);//depends on height
 		}
 		if (!down) {
-			setBounds(positionX, positionY, 150, 200);	
+			setBounds(positionX, positionY, 150, 200);//depends on height
+		}
+		if (attacking && collision()) {
+			int enemyHP = enemy.getHealth();
+			if(enemyHP != 0){
+				enemy.setHealth(enemyHP-10);
+				attacking = false;
+			}
+			//else: the enemy is dead
+			
 		}
 	}
 }

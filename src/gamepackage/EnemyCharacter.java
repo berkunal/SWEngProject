@@ -19,7 +19,7 @@ class EnemyCharacter extends JLabel {
 
 	public EnemyCharacter(int frameBoundX, int frameBoundY) {
 		// TODO Auto-generated constructor stub
-		this.positionX = frameBoundX - 150 - 50;
+		this.positionX = frameBoundX - 150 - 50;//depends on height
 		this.positionY = frameBoundY-250;
 		this.frameBoundX = frameBoundX;
 		this.frameBoundy = frameBoundY;
@@ -45,10 +45,25 @@ class EnemyCharacter extends JLabel {
 	public void setAttacking(boolean b){
 		this.attacking = b;
 	}
+	public void setHealth(int hp){
+		this.health = hp;
+	}
+	
+	//Getter methods
+	public int getpositionX(){
+		return positionX;
+	}
+	public int getpositionY(){
+		return positionY;
+	}
+	public int getHealth(){
+		return health;
+	}
 	
 	public void update() {
 		
 		//randomly moves?
+		setText("Enemy Health: "+health);
 
 	}
 
