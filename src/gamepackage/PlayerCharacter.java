@@ -107,14 +107,14 @@ class PlayerCharacter extends JLabel {
 						positionY--;
 						setBounds(positionX, positionY, 150, 200);//depends on height
 						//sleepTime changes by the position of the player for making accelerated movement
-						if(i<=55){
-							sleepTime = 100/55;
+						if(i<=100-55-33){
+							sleepTime = 150/11;
 						}
-						else if(i<=88){
-							sleepTime = 100/33;
+						else if(i<=100-55){
+							sleepTime = 150/33;
 						}
 						else if(i<100){
-							sleepTime = 100/11;
+							sleepTime = 150/55;
 						}
 						try {
 							TimeUnit.MILLISECONDS.sleep(sleepTime);
@@ -135,13 +135,13 @@ class PlayerCharacter extends JLabel {
 						setBounds(positionX, positionY, 150, 200);//depends on height
 						
 						if(i<=55){
-							sleepTime = 100/55;
+							sleepTime = 150/55;
 						}
 						else if(i<=88){
-							sleepTime = 100/33;
+							sleepTime = 150/33;
 						}
 						else if(i<100){
-							sleepTime = 100/11;
+							sleepTime = 150/11;
 						}
 				
 						try {
