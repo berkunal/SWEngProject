@@ -14,12 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-class CharacterSelection extends JPanel {
+class EndGame extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 	private Font font, sizedFont = null;
-
-	public CharacterSelection(JFrame f, int frameBoundX, int frameBoundY,int difficulty) {
+	
+	public EndGame(JFrame f, int frameBoundX, int frameBoundY, boolean win) {
 		
 		// Font
 		InputStream is = Menu.class.getResourceAsStream("Cheap Potatoes.ttf");
@@ -31,28 +31,38 @@ class CharacterSelection extends JPanel {
 			e1.printStackTrace();
 		}
 		
-		//Main Panel of Character  Selection Section created here
-		JPanel charPanel = new JPanel();
-		charPanel.setLayout(null);
+		//Main Panel of End Game Section created here
+		JPanel endPanel = new JPanel();
+		endPanel.setLayout(null);
 		setBounds(0,0,frameBoundX, frameBoundY);
 		
 		//Logo
-		JLabel logoLabel = new JLabel("GEOTRIX", SwingConstants.CENTER);
+		JLabel logoLabel;
+		if (win){
+			logoLabel = new JLabel("You Won!", SwingConstants.CENTER);
+		} else {
+			logoLabel = new JLabel("You Lost!", SwingConstants.CENTER);
+		}
 		sizedFont = font.deriveFont(68f);
 		logoLabel.setFont(sizedFont);
-		logoLabel.setBounds(frameBoundX / 2 - 200, (frameBoundY-520)/ 2, 400, 190);
-		charPanel.add(logoLabel);
+		logoLabel.setBounds(frameBoundX / 2 - 300, (frameBoundY-520)/ 2, 600, 190);
+		endPanel.add(logoLabel);
 		
-		JButton charSelectButton = new JButton("Select Character");
-		charSelectButton.setBounds(10, 10, 200, 100);
-		// when charSelectButton clicked
-		charSelectButton.addActionListener(new ActionListener() {
+		//Back Button
+		JButton backButton = new JButton("Back to Main Menu");
+		backButton.setBorderPainted(false);
+		backButton.setFocusPainted(false);
+		backButton.setContentAreaFilled(false);
+		sizedFont = font.deriveFont(Font.BOLD, 30f);
+		backButton.setFont(sizedFont);
+		backButton.setBounds(frameBoundX / 2 - 300, (frameBoundY-520)/ 2 + 200, 600, 200);
+		// when backButton clicked
+		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				f.getContentPane().removeAll();
-				f.setVisible(false);
-				f.dispose();
-				new Game(frameBoundX, frameBoundY);
+				//remove panel
+				endPanel.setVisible(false);
+				f.remove(endPanel);
+				new MainMenu(f, frameBoundX, frameBoundY);
 			}
 		});
 		
@@ -65,13 +75,14 @@ class CharacterSelection extends JPanel {
 		JLabel bgLabel = new JLabel(imgIc);
 		bgLabel.setBounds(0, 0, frameBoundX, frameBoundY);
 
-		charPanel.add(charSelectButton);
-		charPanel.add(logoLabel);
-		charPanel.add(bgLabel);
+		endPanel.add(backButton);
+		endPanel.add(logoLabel);
+		endPanel.add(bgLabel);
 		
-		f.add(charPanel);
+		f.add(endPanel);
 		f.revalidate();
 		f.setVisible(true);
+		
 	}
 
 }
