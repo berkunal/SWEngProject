@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -30,30 +32,31 @@ class Menu extends JFrame {
 
 	public Menu() {
 		// TODO Auto-generated constructor stub
-		
+
 		JFrame f = new JFrame("Geotrix");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		// Login Panel
 		JPanel loginPanel = new JPanel();
 		loginPanel.setLayout(null);
 
-		//Background Icon
+		// Background Icon
 		String img = "ArkaPlan.jpg";
 		ImageIcon i = new ImageIcon(this.getClass().getResource(img));
-		
-		//Backgroud Label
+
+		// Backgroud Label
 		JLabel bgLabel = new JLabel(i);
-		
-		//Font
+
+		// Font
 		InputStream is = Menu.class.getResourceAsStream("Cheap Potatoes.ttf");
 		try {
 			font = Font.createFont(Font.TRUETYPE_FONT, is);
 		} catch (FontFormatException | IOException e1) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch
+			// block
 			e1.printStackTrace();
 		}
-		
+
 		// Logo Label
 		JLabel logoLabel = new JLabel("GEOTRIX", SwingConstants.CENTER);
 		sizedFont = font.deriveFont(68f);
@@ -62,21 +65,39 @@ class Menu extends JFrame {
 		// username
 		JTextField usernameTextField = new JTextField("Username", 15);
 		usernameTextField.setOpaque(false);
-		sizedFont = font.deriveFont(30f);
+		sizedFont = font.deriveFont(26f);
 		usernameTextField.setFont(sizedFont);
+		usernameTextField.addMouseListener(new MouseAdapter() {
+			boolean firstClick = true;
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (firstClick) {
+					usernameTextField.setText("");
+					firstClick = false;
+				}
+			}
+		});
 
 		// password
-		JTextField passwordTextField = new JPasswordField("123456", 15);
+		JPasswordField passwordTextField = new JPasswordField("123456", 15);
 		passwordTextField.setOpaque(false);
-		sizedFont = font.deriveFont(30f);
+		sizedFont = font.deriveFont(35f);
 		passwordTextField.setFont(sizedFont);
+		passwordTextField.setEchoChar('*');
+		passwordTextField.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				passwordTextField.setText("");
+			}
+		});
 
 		// sign in
-		JButton signInButton = new JButton("Sign In");
+		JButton signInButton = new JButton("Sign Up");
 		signInButton.setBorderPainted(false);
 		signInButton.setFocusPainted(false);
 		signInButton.setContentAreaFilled(false);
-		sizedFont = font.deriveFont(Font.BOLD, 30f);
+		sizedFont = font.deriveFont(Font.BOLD, 26f);
 		signInButton.setFont(sizedFont);
 
 		// log in
@@ -84,7 +105,7 @@ class Menu extends JFrame {
 		logInButton.setBorderPainted(false);
 		logInButton.setFocusPainted(false);
 		logInButton.setContentAreaFilled(false);
-		sizedFont = font.deriveFont(Font.BOLD, 30f);
+		sizedFont = font.deriveFont(Font.BOLD, 26f);
 		logInButton.setFont(sizedFont);
 		// when login button clicked
 		logInButton.addActionListener(new ActionListener() {
@@ -108,7 +129,7 @@ class Menu extends JFrame {
 		// when settings button clicked
 		settingsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//resolution selection dialog box
+				// resolution selection dialog box
 				JDialog.setDefaultLookAndFeelDecorated(true);
 				Object[] selectionValues = { "1920x1080", "1600x900",
 						"1366x768", "1280x720",
@@ -128,7 +149,7 @@ class Menu extends JFrame {
 					frameBoundY = 900;
 				} else if (Objects.equals(selectionValues[2], selection)) {
 					frameBoundX = 1366;
-					frameBoundY= 768;
+					frameBoundY = 768;
 				} else if (Objects.equals(selectionValues[3], selection)) {
 					frameBoundX = 1280;
 					frameBoundY = 720;
@@ -136,7 +157,8 @@ class Menu extends JFrame {
 					frameBoundX = 960;
 					frameBoundY = 540;
 				}
-				resetLoginUI(frameBoundX, frameBoundY, f, loginPanel, logoLabel,
+				resetLoginUI(frameBoundX, frameBoundY, f, loginPanel,
+						logoLabel,
 						usernameTextField,
 						passwordTextField,
 						signInButton,
@@ -157,8 +179,8 @@ class Menu extends JFrame {
 		loginPanel.add(bgLabel);
 		// adding login panel to main frame
 		f.add(loginPanel);
-		
-		//reset the UI to set the bounds of the components
+
+		// reset the UI to set the bounds of the components
 		resetLoginUI(frameBoundX, frameBoundY, f, loginPanel, logoLabel, usernameTextField,
 				passwordTextField, signInButton, logInButton,
 				settingsButton, bgLabel);
@@ -169,10 +191,11 @@ class Menu extends JFrame {
 
 	}
 
-	//resets the login UI
+	// resets the login UI
 	private void resetLoginUI(int x, int y, JFrame f, JPanel loginPanel, JLabel logoLabel,
 			JTextField usernameTextField, JTextField passwordTextField,
-			JButton signInButton, JButton logInButton, JButton settingsButton, JLabel bgLabel) {
+			JButton signInButton, JButton logInButton, JButton settingsButton,
+			JLabel bgLabel) {
 
 		int i = y - 520;
 
