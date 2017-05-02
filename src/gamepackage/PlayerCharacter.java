@@ -18,6 +18,7 @@ class PlayerCharacter extends JLabel {
 	private boolean down = false;
 	private boolean attacking = false;
 	private boolean jumping = false;
+	private boolean win = false;
 	private int health = 100;
 	private EnemyCharacter enemy;
 
@@ -60,6 +61,9 @@ class PlayerCharacter extends JLabel {
 	}
 	public int getpositionY(){
 		return positionY;
+	}
+	public boolean getWin(){
+		return win;
 	}
 
 	private boolean collision () {
@@ -107,7 +111,7 @@ class PlayerCharacter extends JLabel {
 						positionY--;
 						setBounds(positionX, positionY, 150, 200);//depends on height
 						try {
-							TimeUnit.MILLISECONDS.sleep(2);
+							TimeUnit.MILLISECONDS.sleep(3);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -118,7 +122,7 @@ class PlayerCharacter extends JLabel {
 						positionY++;
 						setBounds(positionX, positionY, 150, 200);//depends on height
 						try {
-							TimeUnit.MILLISECONDS.sleep(2);
+							TimeUnit.MILLISECONDS.sleep(3);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -145,11 +149,12 @@ class PlayerCharacter extends JLabel {
 		}
 		if (attacking && collision()) {
 			int enemyHP = enemy.getHealth();
-			if(enemyHP != 0){
+			if(enemyHP > 0){
 				enemy.setHealth(enemyHP-10);
 				attacking = false;
+			} else {
+				win = true;
 			}
-			//else: the enemy is dead
 			
 		}
 	}

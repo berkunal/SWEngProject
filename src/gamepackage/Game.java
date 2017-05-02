@@ -1,8 +1,13 @@
 package gamepackage;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -16,6 +21,7 @@ class Game extends JFrame implements Runnable, KeyListener {
 	private JLabel healthbarLabelPlayer;
 	private static PlayerCharacter player;
 	private static EnemyCharacter enemy;
+	private int frameBoundX, frameBoundY;
 	private JFrame f;
 	
 	private boolean running = false;
@@ -23,6 +29,18 @@ class Game extends JFrame implements Runnable, KeyListener {
 	
 	public Game( int frameBoundX, int frameBoundY) {	
 		super();
+		this.frameBoundX = frameBoundX;
+		this.frameBoundY = frameBoundY;
+		
+		Font font = null;
+		try {
+			GraphicsEnvironment ge = GraphicsEnvironment
+					.getLocalGraphicsEnvironment();
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,
+					new File("Cheap Potatoes.ttf")));
+		} catch (IOException | FontFormatException e) {
+			// Handle exception
+		}
 		
 		f = new JFrame("Geotrix");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,6 +66,7 @@ class Game extends JFrame implements Runnable, KeyListener {
 		healthbarLabelEnemy.setBounds(g + 210, 50, g, 50);
 		healthbarLabelEnemy.setBackground(Color.red);
 		healthbarLabelEnemy.setOpaque(true);
+		healthbarLabelEnemy.setFont(font);
 		f.add(healthbarLabelEnemy);
 		
 		
@@ -80,13 +99,25 @@ class Game extends JFrame implements Runnable, KeyListener {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		
 		running = true;
 		while (running) {
+			
 			player.update();
+			if(player.getWin()){
+				f.setVisible(false);
+				f.dispose();
+				JFrame newFrame = new JFrame("Geotrix");
+				newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				newFrame.setBounds(0, 0, frameBoundX, frameBoundY );
+				new EndGame(newFrame, frameBoundX, frameBoundY, player.getWin());
+				running = false;
+				break;
+			}
 			enemy.update();
 			f.revalidate();
 			f.repaint();
+			
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {

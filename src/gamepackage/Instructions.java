@@ -1,5 +1,6 @@
 package gamepackage;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.event.ActionEvent;
@@ -14,12 +15,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-class CharacterSelection extends JPanel {
+class Instructions extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 	private Font font, sizedFont = null;
-
-	public CharacterSelection(JFrame f, int frameBoundX, int frameBoundY,int difficulty) {
+	
+	public Instructions(JFrame f, int frameBoundX, int frameBoundY) {
 		
 		// Font
 		InputStream is = Menu.class.getResourceAsStream("Cheap Potatoes.ttf");
@@ -31,9 +32,9 @@ class CharacterSelection extends JPanel {
 			e1.printStackTrace();
 		}
 		
-		//Main Panel of Character  Selection Section created here
-		JPanel charPanel = new JPanel();
-		charPanel.setLayout(null);
+		//Main Panel of Instructions Section created here
+		JPanel instrPanel = new JPanel();
+		instrPanel.setLayout(null);
 		setBounds(0,0,frameBoundX, frameBoundY);
 		
 		//Logo
@@ -41,18 +42,23 @@ class CharacterSelection extends JPanel {
 		sizedFont = font.deriveFont(68f);
 		logoLabel.setFont(sizedFont);
 		logoLabel.setBounds(frameBoundX / 2 - 200, (frameBoundY-520)/ 2, 400, 190);
-		charPanel.add(logoLabel);
+		instrPanel.add(logoLabel);
 		
-		JButton charSelectButton = new JButton("Select Character");
-		charSelectButton.setBounds(10, 10, 200, 100);
-		// when charSelectButton clicked
-		charSelectButton.addActionListener(new ActionListener() {
+		JButton backButton = new JButton("Back");
+		backButton.setBorderPainted(false);
+		backButton.setFocusPainted(false);
+		backButton.setContentAreaFilled(false);
+		sizedFont = font.deriveFont(Font.BOLD, 30f);
+		backButton.setFont(sizedFont);
+		backButton.setForeground(Color.RED);
+		backButton.setBounds(10, 10, 200, 100);
+		// when backButton clicked
+		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				f.getContentPane().removeAll();
-				f.setVisible(false);
-				f.dispose();
-				new Game(frameBoundX, frameBoundY);
+				//remove panel
+				instrPanel.setVisible(false);
+				f.remove(instrPanel);
+				new MainMenu(f, frameBoundX, frameBoundY);
 			}
 		});
 		
@@ -65,13 +71,15 @@ class CharacterSelection extends JPanel {
 		JLabel bgLabel = new JLabel(imgIc);
 		bgLabel.setBounds(0, 0, frameBoundX, frameBoundY);
 
-		charPanel.add(charSelectButton);
-		charPanel.add(logoLabel);
-		charPanel.add(bgLabel);
+		instrPanel.add(backButton);
+		instrPanel.add(logoLabel);
+		instrPanel.add(bgLabel);
 		
-		f.add(charPanel);
+		f.add(instrPanel);
 		f.revalidate();
 		f.setVisible(true);
+		
+		
 	}
 
 }
