@@ -106,23 +106,50 @@ class PlayerCharacter extends JLabel {
 				public void run() {
 					//going upwards
 					verticalSpeed = 100;
-					
+					int sleepTime=0;
 					for (int i = verticalSpeed; i > 0; i--) {
 						positionY--;
 						setBounds(positionX, positionY, 150, 200);//depends on height
+						//sleepTime changes by the position of the player for making accelerated movement
+						if(i<=100-55-33){
+							sleepTime = 150/11;
+						}
+						else if(i<=100-55){
+							sleepTime = 150/33;
+						}
+						else if(i<100){
+							sleepTime = 150/55;
+						}
 						try {
-							TimeUnit.MILLISECONDS.sleep(3);
+							TimeUnit.MILLISECONDS.sleep(sleepTime);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
+					try {
+						TimeUnit.MILLISECONDS.sleep(10);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					//falling			
 					for (int i = verticalSpeed; i > 0; i--) {
 						positionY++;
 						setBounds(positionX, positionY, 150, 200);//depends on height
+						
+						if(i<=55){
+							sleepTime = 150/55;
+						}
+						else if(i<=88){
+							sleepTime = 150/33;
+						}
+						else if(i<100){
+							sleepTime = 150/11;
+						}
+				
 						try {
-							TimeUnit.MILLISECONDS.sleep(3);
+							TimeUnit.MILLISECONDS.sleep(sleepTime);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
