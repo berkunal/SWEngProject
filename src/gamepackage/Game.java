@@ -3,14 +3,11 @@ package gamepackage;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -211,7 +208,21 @@ class Game extends JFrame implements Runnable, KeyListener {
 				break;
 			}
 			
-			
+			if (timePanel.getText().compareTo("0") == 0) {
+				if (player.getHealth()>enemy.getHealth()) {
+					player.setWin(true);
+				}
+				f.setVisible(false);
+				f.dispose();
+				//dispose current frame, create new one
+				JFrame newFrame = new JFrame("Geotrix");
+				newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				newFrame.setBounds(0, 0, frameBoundX, frameBoundY );
+				//pass the value of player.win to new frame
+				new EndGame(newFrame, frameBoundX, frameBoundY, player.getWin());
+				running = false;
+				break;
+			}
 			
 			
 			

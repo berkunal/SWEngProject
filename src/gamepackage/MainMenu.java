@@ -6,11 +6,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
@@ -18,9 +21,13 @@ class MainMenu extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 	private Font font, sizedFont = null;
+	private int frameX, frameY;
 
 	public MainMenu(JFrame f, int frameBoundX, int frameBoundY) {
 		//Contents: Logo, new game, options, instructions, exit buttons
+		
+		this.frameX = frameBoundX;
+		this.frameY = frameBoundY;
 		
 		//Main Panel of Main Menu created here
 		JPanel mainMenuPanel = new JPanel();
@@ -61,18 +68,9 @@ class MainMenu extends JPanel{
 				mainMenuPanel.setVisible(false);
 				f.remove(mainMenuPanel);
 				// call difficulty panel
-				new Difficulty(f, frameBoundX, frameBoundY);
+				new Difficulty(f, frameX, frameY);
 			}
 		});
-		
-		
-		//Options Button
-		JButton optionsButton = new JButton("Options");
-		optionsButton.setBorderPainted(false);
-		optionsButton.setFocusPainted(false);
-		optionsButton.setContentAreaFilled(false);
-		sizedFont = font.deriveFont(Font.BOLD, 30f);
-		optionsButton.setFont(sizedFont);
 		
 		//Instructions Button 
 		JButton instrButton = new JButton("Instructions");
@@ -88,7 +86,7 @@ class MainMenu extends JPanel{
 				mainMenuPanel.setVisible(false);
 				f.remove(mainMenuPanel);
 				// call instructions panel
-				new Instructions(f, frameBoundX, frameBoundY);
+				new Instructions(f, frameX, frameBoundY);
 			}
 		});
 		
@@ -105,6 +103,51 @@ class MainMenu extends JPanel{
 			}
 		});
 		
+		
+		//Options Button
+		JButton optionsButton = new JButton("Options");
+		optionsButton.setBorderPainted(false);
+		optionsButton.setFocusPainted(false);
+		optionsButton.setContentAreaFilled(false);
+		sizedFont = font.deriveFont(Font.BOLD, 30f);
+		optionsButton.setFont(sizedFont);
+		optionsButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JDialog.setDefaultLookAndFeelDecorated(true);
+				Object[] selectionValues = { "1920x1080", "1600x900",
+						"1366x768", "1280x720",
+						"960x540" };
+				Object selection = JOptionPane.showInputDialog(null,
+						"Choose resolution",
+						"Settings",
+						JOptionPane.QUESTION_MESSAGE,
+						null, selectionValues,
+						selectionValues[4]);
+
+				if (Objects.equals(selectionValues[0], selection)) {
+					frameX = 1920;
+					frameY = 1080;
+				} else if (Objects.equals(selectionValues[1], selection)) {
+					frameX = 1600;
+					frameY = 900;
+				} else if (Objects.equals(selectionValues[2], selection)) {
+					frameX = 1366;
+					frameY = 768;
+				} else if (Objects.equals(selectionValues[3], selection)) {
+					frameX = 1280;
+					frameY = 720;
+				} else if (Objects.equals(selectionValues[4], selection)) {
+					frameX = 960;
+					frameY = 540;
+				}
+				resetUIMainMenu(frameX, frameY, f, mainMenuPanel, bgLabel, logoLabel,
+						newGameButton, optionsButton, instrButton, exitButton);
+				
+			}
+		});
+		
 		//add components to main panel
 		mainMenuPanel.add(logoLabel);
 		mainMenuPanel.add(newGameButton);
@@ -115,7 +158,7 @@ class MainMenu extends JPanel{
 		
 		f.add(mainMenuPanel);
 		
-		resetUIMainMenu(frameBoundX, frameBoundY, f, mainMenuPanel, bgLabel, logoLabel,
+		resetUIMainMenu(frameX, frameY, f, mainMenuPanel, bgLabel, logoLabel,
 				newGameButton, optionsButton, instrButton, exitButton);
 		
 		f.setVisible(true);

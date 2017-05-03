@@ -10,7 +10,7 @@ class EnemyCharacter extends JLabel {
 
 	private static final long serialVersionUID = 1L;
 	private int positionX, positionY;
-	private int frameBoundX, frameBoundy;
+	private int frameBoundX, frameBoundY;
 	private int speed;
 	private int verticalSpeed = 0;
 	private boolean left = false;
@@ -30,7 +30,7 @@ class EnemyCharacter extends JLabel {
 		this.positionX = frameBoundX - 150 - 50;//depends on height
 		this.positionY = frameBoundY-250;
 		this.frameBoundX = frameBoundX;
-		this.frameBoundy = frameBoundY;
+		this.frameBoundY = frameBoundY;
 		setBounds(positionX, positionY, 150, 200);//the heigh will differ, can get as parameters
 		setBackground(Color.cyan);
 		setText("Enemy");

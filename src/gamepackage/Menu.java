@@ -160,7 +160,7 @@ class Menu extends JFrame {
 					newUser = new User( usernameTextField.getText(), new String(passwordTextField.getPassword()) );
 					userList.add(newUser);
 					try {
-						bw = new BufferedWriter(new FileWriter(userDataFile));
+						bw = new BufferedWriter(new FileWriter(userDataFile, true));
 						bw.write( newUser.username + "-" + newUser.password + "-" + newUser.score);
 						bw.newLine();
 						bw.flush();
