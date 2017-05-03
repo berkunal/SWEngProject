@@ -109,7 +109,7 @@ class Difficulty extends JPanel {
 		});
 		
 		//Background Icon
-		String img = "ArkaPlan.jpg";
+		String img = "background_revision.jpg";
 		ImageIcon imgIc = new ImageIcon(this.getClass().getResource(img));
 		
 		//Backgroud Label

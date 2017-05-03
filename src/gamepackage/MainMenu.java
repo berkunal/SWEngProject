@@ -27,7 +27,7 @@ class MainMenu extends JPanel{
 		mainMenuPanel.setLayout(null);
 		
 		//Background Icon
-		String img = "ArkaPlan.jpg";
+		String img = "background_revision.jpg";
 		ImageIcon icon = new ImageIcon(this.getClass().getResource(img));
 		
 		//Backgroud Label

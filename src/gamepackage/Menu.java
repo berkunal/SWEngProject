@@ -41,7 +41,7 @@ class Menu extends JFrame {
 		loginPanel.setLayout(null);
 
 		// Background Icon
-		String img = "ArkaPlan.jpg";
+		String img = "background_revision.jpg";
 		ImageIcon i = new ImageIcon(this.getClass().getResource(img));
 
 		// Backgroud Label

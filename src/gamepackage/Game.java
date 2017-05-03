@@ -46,7 +46,7 @@ class Game extends JFrame implements Runnable, KeyListener {
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//background
-		img = new ImageIcon(getClass().getResource("ArkaPlan.jpg"));
+		img = new ImageIcon(getClass().getResource("background_revision.jpg"));
 		JLabel contentPane = new JLabel();
 		contentPane.setIcon( img );
 		contentPane.setLayout( null );
