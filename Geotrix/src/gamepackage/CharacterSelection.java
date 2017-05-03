@@ -11,7 +11,7 @@ class CharacterSelection extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	public CharacterSelection(JFrame f, int frameBoundX, int frameBoundY) {
+	public CharacterSelection(JFrame f, int frameBoundX, int frameBoundY,int difficulty) {
 		
 		setBounds(0,0,frameBoundX, frameBoundY);
 
@@ -22,9 +22,8 @@ class CharacterSelection extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 				f.getContentPane().removeAll();
-				JPanel gamePanel = new Game(f, frameBoundX, frameBoundY);
-				gamePanel.setLayout(null);
-				f.add(gamePanel);
+				f.setVisible(false);
+				JFrame gamePanel = new Game(frameBoundX, frameBoundY);
 			}
 		});
 

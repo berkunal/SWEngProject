@@ -3,7 +3,16 @@ package gamepackage;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Objects;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -41,9 +50,82 @@ class Menu extends JFrame {
 
 		// password
 		JTextField passwordTextField = new JPasswordField("Passwd", 15);
+		
 
 		// sign in
-		JButton signInButton = new JButton("Sign In");
+		JButton signInButton = new JButton("Sign In");		
+		// when signin button clicked
+		signInButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// remove login panel
+				loginPanel.setVisible(false);
+				f.remove(loginPanel);
+				//dssf
+				 
+				 String username = usernameTextField.getText();
+				 String password = passwordTextField.getText();
+				 
+				 String checkname;
+				 String checkpass;
+				 int flag = 0;
+				 
+				 //check if data is already exist or not
+				 try(BufferedReader br = new BufferedReader(new FileReader("File.txt"))){
+					 
+					 while ( ((checkname = br.readLine()) != null)  && (flag == 0)) {
+					       
+						 
+						 if((username.equals(checkname))){
+							 JOptionPane.showMessageDialog(null, "Username already exist.");
+							 flag = 1;
+							 checkpass = br.readLine();							 
+								
+								 
+						}else if (br.readLine() == null)
+							 {
+								 
+								 break;
+								 
+							 }
+						 
+					    }
+					 
+					 	// we have to call Menu() here but this way menu should be implement to ActionListener;
+					
+					
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+
+				 
+				 
+				 if(flag==0){
+								
+					 try(FileWriter fw = new FileWriter("File.txt", true);
+							 BufferedWriter bw = new BufferedWriter(fw);
+							 PrintWriter pw = new PrintWriter(bw))
+							 {
+					        	//pw.println("");
+					        	pw.println(username);						    
+					        	pw.println(password);
+						    
+							 } catch (IOException e1) {}
+						    
+					 
+				 
+					 JOptionPane.showMessageDialog(null, "You are registered succesfully.");
+				     }
+				 
+				
+				
+				
+			}
+		});
+
 
 		// log in
 		JButton logInButton = new JButton("Log In");
@@ -53,10 +135,64 @@ class Menu extends JFrame {
 				// remove login panel
 				loginPanel.setVisible(false);
 				f.remove(loginPanel);
-				// call game panel
-				JPanel difficultyPanel = new Difficulty(f, frameBoundX, frameBoundY);
-				difficultyPanel.setLayout(null);
-				f.add(difficultyPanel);
+				//dssf
+				 
+				 String username = usernameTextField.getText();
+				 String password = passwordTextField.getText();
+				 
+				 String SavedUser;
+				 String SavedPass;
+				 
+				 
+				 try(BufferedReader br = new BufferedReader(new FileReader("File.txt"))){
+										 
+					 while ((SavedUser = br.readLine()) != null) {
+					       
+						 
+						 if((username.equals(SavedUser))){
+							 SavedPass = br.readLine();
+							 if(( password.equals(SavedPass))){
+								 
+								// call game panel
+									JPanel difficultyPanel = new Difficulty(f, frameBoundX, frameBoundY);
+									difficultyPanel.setLayout(null);
+									f.add(difficultyPanel);
+									break;
+								 
+							 }else if(br.readLine() == null)
+							 {
+								 JOptionPane.showMessageDialog(null, "Wrong password"); 
+								 break;
+								 
+								 
+							 }	 
+							 
+								
+								 
+						}else if (br.readLine() == null)
+							 {
+								 JOptionPane.showMessageDialog(null, "Wrong username");
+								 break;
+								 
+							 }
+						 
+					    }
+					 
+					 	// we have to call Menu() here but this way menu should be implement to ActionListener;
+					
+					
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				 
+				 
+				
+				
+				
 			}
 		});
 
@@ -153,5 +289,4 @@ class Menu extends JFrame {
 		// TODO Auto-generated method stub
 		new Menu();
 	}
-
 }
