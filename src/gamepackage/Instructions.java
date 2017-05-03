@@ -42,7 +42,6 @@ class Instructions extends JPanel{
 		sizedFont = font.deriveFont(68f);
 		logoLabel.setFont(sizedFont);
 		logoLabel.setBounds(frameBoundX / 2 - 200, (frameBoundY-520)/ 2, 400, 190);
-		instrPanel.add(logoLabel);
 		
 		JButton backButton = new JButton("Back");
 		backButton.setBorderPainted(false);
@@ -62,9 +61,15 @@ class Instructions extends JPanel{
 			}
 		});
 		
-		
+		//Logo
+		JLabel instructionLabel = new JLabel("Arrow keys + Space button", SwingConstants.CENTER);
+		sizedFont = font.deriveFont(40f);
+		instructionLabel.setFont(sizedFont);
+		instructionLabel.setBounds(25, frameBoundY/2 - 100, frameBoundX - 50, 200);
+		instrPanel.add(instructionLabel);
+
 		//Background Icon
-		String img = "ArkaPlan.jpg";
+		String img = "background_revision.jpg";
 		ImageIcon imgIc = new ImageIcon(this.getClass().getResource(img));
 		
 		//Backgroud Label

@@ -21,6 +21,7 @@ class PlayerCharacter extends JLabel {
 	private boolean win = false;
 	private int health = 100;
 	private EnemyCharacter enemy;
+	private boolean playerHit = false;
 
 	public PlayerCharacter(int frameBoundX, int frameBoundY) {
 		// TODO Auto-generated constructor stub
@@ -54,6 +55,15 @@ class PlayerCharacter extends JLabel {
 	public void setEnemy(EnemyCharacter enemy){
 		this.enemy = enemy;
 	}
+	public void setPlayerHit(boolean b){
+		this.playerHit = b;
+	}
+	public void setHealth(int hp){
+		this.health = hp;
+	}
+	public void setWin(boolean b){
+		this.win = b;
+	}
 	
 	//Getter methods
 	public int getpositionX(){
@@ -65,11 +75,23 @@ class PlayerCharacter extends JLabel {
 	public boolean getWin(){
 		return win;
 	}
+	public int getHealth() {
+		return health;
+	}
+	public boolean  getAttacking() {
+		return attacking;
+	}
+	public boolean getDown() {
+		return down;
+	}
+	public	boolean getPlayerHit() {
+		return playerHit;
+	}
 
 	private boolean collision () {
 		int enemyX = enemy.getpositionX();
 		int w = (down) ? 175 :150 ;
-		if ( positionX + w > enemyX) {//depends on width
+		if ( this.positionX + w > enemyX) {//depends on width
 			return true;
 		}
 		return false;
@@ -78,20 +100,23 @@ class PlayerCharacter extends JLabel {
 	//update method, used at moving the object
 	public void update() {
 		//player moving right
+		
 		if (right && !collision()) {
+			int w = (down) ? 175 :150 ;
 			if(positionX < frameBoundX -25 - 150){//depends on height
 				for (int i = speed; i > 0; i--) {
 					positionX++;
-					setBounds(positionX, positionY, 150, 200);//depends on height
+					setBounds(positionX, positionY, w, 200);//depends on height
 				}
 			}	
 		}
 		//player moving left
 		if (left) {
+			int w = (down) ? 175 :150 ;
 			if(positionX > 25){
 				for (int i = speed; i > 0; i--) {
 					positionX--;
-					setBounds(positionX, positionY, 150, 200);//depends on height
+					setBounds(positionX, positionY, w, 200);//depends on height
 				}
 			}
 				
@@ -175,14 +200,8 @@ class PlayerCharacter extends JLabel {
 			setBounds(positionX, positionY, 150, 200);//depends on height
 		}
 		if (attacking && collision()) {
-			int enemyHP = enemy.getHealth();
-			if(enemyHP > 0){
-				enemy.setHealth(enemyHP-10);
-				attacking = false;
-			} else {
-				win = true;
-			}
-			
+			playerHit = true;
+			attacking = false;
 		}
 	}
 }

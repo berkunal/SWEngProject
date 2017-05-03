@@ -3,55 +3,61 @@ package gamepackage;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-import java.io.File;
+import java.util.concurrent.ThreadLocalRandom;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 class Game extends JFrame implements Runnable, KeyListener {
 
 	private static final long serialVersionUID = 1L;
 	private Icon img;
 	private JLabel healthbarLabelPlayer;
+	private JLabel  healthbarLabelEnemy;
 	private JLabel readyText, timePanel;
 	private static PlayerCharacter player;
 	private static EnemyCharacter enemy;
 	private int frameBoundX, frameBoundY;
 	private JFrame f;
 	private int countDown;
+	private int difficulty, character;
 	
 	private boolean running = false;
 	private Thread thread;
+	private Font font, sizedFont = null;
 	
-	public Game( int frameBoundX, int frameBoundY) {	
+	public Game( int frameBoundX, int frameBoundY, int difficulty, int character) {	
 		super();
 		this.frameBoundX = frameBoundX;
 		this.frameBoundY = frameBoundY;
+		this.character = character;//1-sq 2-tri 3-circ 4-penta
+		this.difficulty = difficulty;//1-easy 2-med 3-hard
 		
-		Font font = null;
+		// Font
+		InputStream is = Menu.class.getResourceAsStream("Cheap Potatoes.ttf");
 		try {
-			GraphicsEnvironment ge = GraphicsEnvironment
-					.getLocalGraphicsEnvironment();
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,
-					new File("Cheap Potatoes.ttf")));
-		} catch (IOException | FontFormatException e) {
-			// Handle exception
+			font = Font.createFont(Font.TRUETYPE_FONT, is);
+		} catch (FontFormatException | IOException e1) {
+			// TODO Auto-generated catch
+			// block
+			e1.printStackTrace();
 		}
+		
 		
 		f = new JFrame("Geotrix");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//background
-		img = new ImageIcon(getClass().getResource("ArkaPlan.jpg"));
+		img = new ImageIcon(getClass().getResource("background_revision.jpg"));
 		JLabel contentPane = new JLabel();
 		contentPane.setIcon( img );
 		contentPane.setLayout( null );
@@ -60,26 +66,27 @@ class Game extends JFrame implements Runnable, KeyListener {
 		
 		int g = (frameBoundX - 260)/2;
 		//healthbar for Player
-		healthbarLabelPlayer = new JLabel("HealthBar1");
+		healthbarLabelPlayer = new JLabel("Health: 100", SwingConstants.CENTER);
 		healthbarLabelPlayer.setBounds(50, 50, g, 50);
-		healthbarLabelPlayer.setBackground(Color.red);
-		healthbarLabelPlayer.setOpaque(true);
+		sizedFont = font.deriveFont(Font.BOLD, 28f);
+		healthbarLabelPlayer.setFont(sizedFont);
+		healthbarLabelPlayer.setForeground(Color.red);
 		f.add(healthbarLabelPlayer);
 		
 		//healtbar2
-		JLabel  healthbarLabelEnemy = new JLabel("HealthBar2");
+		healthbarLabelEnemy = new JLabel("Health: 100", SwingConstants.CENTER);
 		healthbarLabelEnemy.setBounds(g + 210, 50, g, 50);
-		healthbarLabelEnemy.setBackground(Color.red);
-		healthbarLabelEnemy.setOpaque(true);
-		healthbarLabelEnemy.setFont(font);
+		sizedFont = font.deriveFont(Font.BOLD, 28f);
+		healthbarLabelEnemy.setFont(sizedFont);
+		healthbarLabelEnemy.setForeground(Color.red);
 		f.add(healthbarLabelEnemy);
 		
 		
 		//timePanel
-		timePanel = new JLabel("Time");
+		timePanel = new JLabel("99", SwingConstants.CENTER);
+		sizedFont = font.deriveFont(30f);
+		timePanel.setFont(sizedFont);
 		timePanel.setBounds(g + 80, 30, 100, 100);
-		timePanel.setBackground(Color.white);
-		timePanel.setOpaque(true);
 		f.add(timePanel);
 		
 		//Player Label
@@ -91,6 +98,7 @@ class Game extends JFrame implements Runnable, KeyListener {
 		f.add(enemy);
 		
 		player.setEnemy(enemy);
+		enemy.setPlayer(player);
 		
 		f.setSize(frameBoundX, frameBoundY);
 		f.setResizable(false);
@@ -99,9 +107,11 @@ class Game extends JFrame implements Runnable, KeyListener {
 		
 		//get ready panel
 		int i = frameBoundY - 520;
-		readyText = new JLabel();
+		readyText = new JLabel("Ready!", SwingConstants.CENTER);
 		readyText.setLayout(null);
-		readyText.setText("READY");
+		sizedFont = font.deriveFont(45f);
+		readyText.setFont(sizedFont);
+		readyText.setForeground(Color.red);
 		//readyText.setOpaque(true);
 		readyText.setBounds(frameBoundX / 2 - 200, i / 2 + 310, 400, 100);
 	  
@@ -143,26 +153,85 @@ class Game extends JFrame implements Runnable, KeyListener {
 		}, 1, 1000);
 		
 		
+		int enemyHP = 100, playerHP = 100;
+		enemy.enemyBrain();
 		running = true;
 		while (running) {
 			
+			//update the act of player and check if it is hitting the enemy
 			player.update();
-			if(player.getWin()){
+			if (player.getPlayerHit()) {
+				enemyHP -= ThreadLocalRandom.current().nextInt(8,13);
+				enemy.setHealth(enemyHP);
+				player.setPlayerHit(false);
+				healthbarLabelEnemy.setText("Health: " + enemy.getHealth());
+				if (enemyHP<=0) {
+					player.setWin(true);
+				}
+			}
+			//update the act of enemy and check if it is hitting the player
+			enemy.update();
+			if (enemy.getEnemyHit()) {
+				switch (difficulty) {
+				case 1:
+					playerHP -= ThreadLocalRandom.current().nextInt(5,10);
+					break;
+				case 2:
+					playerHP -= ThreadLocalRandom.current().nextInt(8,13);
+					break;
+				case 3:
+					playerHP -= ThreadLocalRandom.current().nextInt(10,16);
+					break;
+				default:
+					break;
+				}
+				playerHP -= ThreadLocalRandom.current().nextInt(8,13);
+				player.setHealth(playerHP);
+				enemy.setEnemyHit(false);
+				healthbarLabelPlayer.setText("Health: " + player.getHealth());
+				if (playerHP<=0) {
+					enemy.setWin(true);
+				}
+			}
+			
+			//check if player or enemy wins
+			if(player.getWin() || enemy.getWin()){
 				f.setVisible(false);
 				f.dispose();
+				//dispose current frame, create new one
 				JFrame newFrame = new JFrame("Geotrix");
 				newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				newFrame.setBounds(0, 0, frameBoundX, frameBoundY );
+				//pass the value of player.win to new frame
 				new EndGame(newFrame, frameBoundX, frameBoundY, player.getWin());
 				running = false;
 				break;
 			}
-			enemy.update();
+			
+			if (timePanel.getText().compareTo("0") == 0) {
+				if (player.getHealth()>enemy.getHealth()) {
+					player.setWin(true);
+				}
+				f.setVisible(false);
+				f.dispose();
+				//dispose current frame, create new one
+				JFrame newFrame = new JFrame("Geotrix");
+				newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				newFrame.setBounds(0, 0, frameBoundX, frameBoundY );
+				//pass the value of player.win to new frame
+				new EndGame(newFrame, frameBoundX, frameBoundY, player.getWin());
+				running = false;
+				break;
+			}
+			
+			
+			
+			
 			f.revalidate();
 			f.repaint();
 			
 			try {
-				Thread.sleep(10);
+				Thread.sleep(3);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

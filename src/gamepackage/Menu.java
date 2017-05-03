@@ -7,8 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import javax.swing.ImageIcon;
@@ -29,6 +36,9 @@ class Menu extends JFrame {
 	private int frameBoundY = 540;// frame y axis
 	private Font sizedFont = null;
 	private Font font;
+	private ArrayList<User> userList = new ArrayList<>();
+	private File userDataFile;
+	private BufferedWriter bw;
 
 	public Menu() {
 		// TODO Auto-generated constructor stub
@@ -36,12 +46,44 @@ class Menu extends JFrame {
 		JFrame f = new JFrame("Geotrix");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		//Open the data file here
+		String currentDir = System.getProperty("user.home");
+		
+		userDataFile = new File(currentDir + "//GeotrixUserData.txt");
+		if (!userDataFile.exists()) {
+			try {
+				userDataFile.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		try {
+			BufferedReader bufferedReader = new BufferedReader(new FileReader(
+					userDataFile));
+			String line = "";
+
+			while ((line = bufferedReader.readLine()) != null) {
+				String[] seperator = line.split("-");
+				userList.add(new User( seperator[0], seperator[1], Integer.parseInt(seperator[2]) ));
+			}
+			bufferedReader.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		// Login Panel
 		JPanel loginPanel = new JPanel();
 		loginPanel.setLayout(null);
 
 		// Background Icon
-		String img = "ArkaPlan.jpg";
+		String img = "background_revision.jpg";
 		ImageIcon i = new ImageIcon(this.getClass().getResource(img));
 
 		// Backgroud Label
@@ -99,6 +141,37 @@ class Menu extends JFrame {
 		signInButton.setContentAreaFilled(false);
 		sizedFont = font.deriveFont(Font.BOLD, 26f);
 		signInButton.setFont(sizedFont);
+		signInButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				User newUser = null;
+
+				for (User u : userList) {
+
+					if (u.username.compareTo(usernameTextField.getText()) == 0) {
+						newUser = u;
+						break;
+					}		
+				}
+				if (newUser != null) {
+					usernameTextField.setText("Failed!");
+					
+				} else {
+					newUser = new User( usernameTextField.getText(), new String(passwordTextField.getPassword()) );
+					userList.add(newUser);
+					try {
+						bw = new BufferedWriter(new FileWriter(userDataFile, true));
+						bw.write( newUser.username + "-" + newUser.password + "-" + newUser.score);
+						bw.newLine();
+						bw.flush();
+						bw.close();
+						usernameTextField.setText("Succesful!");
+					} catch (IOException e2) {
+						e2.printStackTrace();
+					}
+				}
+			}
+		});
 
 		// log in
 		JButton logInButton = new JButton("Log In");
@@ -110,11 +183,27 @@ class Menu extends JFrame {
 		// when login button clicked
 		logInButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// remove login panel
-				loginPanel.setVisible(false);
-				f.remove(loginPanel);
-				// call main menu panel
-				new MainMenu(f, frameBoundX, frameBoundY);
+				
+				User newUser = null;
+				for (User u : userList) {
+
+					if (u.username.compareTo(usernameTextField.getText()) == 0
+							&& u.password.compareTo(new String(passwordTextField.getPassword())) == 0) {
+						newUser = u;
+						break;
+					}
+					
+				}
+				if (newUser == null) {
+					usernameTextField.setText("Failed!");
+				} else {	
+					// remove login panel
+					loginPanel.setVisible(false);
+					f.remove(loginPanel);
+					// call main menu panel
+					new MainMenu(f, frameBoundX, frameBoundY);
+				}
+
 			}
 		});
 
@@ -189,6 +278,41 @@ class Menu extends JFrame {
 		f.setResizable(false);
 		f.setVisible(true);
 
+		
+		f.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+
+				try {
+
+					bw = new BufferedWriter(new FileWriter(
+							userDataFile));
+
+					for (User user : userList) {
+						bw.write(user.username + "-" + user.password
+								+ "-"
+								+ user.score);
+						bw.newLine();
+						bw.flush();
+						bw = new BufferedWriter(new FileWriter(
+								userDataFile,
+								true));
+					}
+
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} finally {
+					if (bw != null) {
+						try {
+							bw.close();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+
+			}
+		});
 	}
 
 	// resets the login UI
