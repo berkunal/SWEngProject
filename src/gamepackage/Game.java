@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.io.File;
 import java.io.IOException;
@@ -31,17 +32,18 @@ class Game extends JFrame implements Runnable, KeyListener {
 	private int frameBoundX, frameBoundY;
 	private JFrame f;
 	private int countDown;
-	
+	private int difficulty, character;
 	
 	private boolean running = false;
 	private Thread thread;
 	private Font font, sizedFont = null;
 	
-	public Game( int frameBoundX, int frameBoundY) {	
+	public Game( int frameBoundX, int frameBoundY, int difficulty, int character) {	
 		super();
 		this.frameBoundX = frameBoundX;
 		this.frameBoundY = frameBoundY;
-		
+		this.character = character;//1-sq 2-tri 3-circ 4-penta
+		this.difficulty = difficulty;//1-easy 2-med 3-hard
 		
 		// Font
 		InputStream is = Menu.class.getResourceAsStream("Cheap Potatoes.ttf");
@@ -162,7 +164,7 @@ class Game extends JFrame implements Runnable, KeyListener {
 			//update the act of player and check if it is hitting the enemy
 			player.update();
 			if (player.getPlayerHit()) {
-				enemyHP -= 10;
+				enemyHP -= ThreadLocalRandom.current().nextInt(8,13);
 				enemy.setHealth(enemyHP);
 				player.setPlayerHit(false);
 				healthbarLabelEnemy.setText("Health: " + enemy.getHealth());
@@ -173,7 +175,20 @@ class Game extends JFrame implements Runnable, KeyListener {
 			//update the act of enemy and check if it is hitting the player
 			enemy.update();
 			if (enemy.getEnemyHit()) {
-				playerHP -= 10;
+				switch (difficulty) {
+				case 1:
+					playerHP -= ThreadLocalRandom.current().nextInt(5,10);
+					break;
+				case 2:
+					playerHP -= ThreadLocalRandom.current().nextInt(8,13);
+					break;
+				case 3:
+					playerHP -= ThreadLocalRandom.current().nextInt(10,16);
+					break;
+				default:
+					break;
+				}
+				playerHP -= ThreadLocalRandom.current().nextInt(8,13);
 				player.setHealth(playerHP);
 				enemy.setEnemyHit(false);
 				healthbarLabelPlayer.setText("Health: " + player.getHealth());

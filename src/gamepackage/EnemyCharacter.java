@@ -229,7 +229,7 @@ class EnemyCharacter extends JLabel {
 					}
 					switch (attackRNG) {
 					case 0:
-						attacking = true;
+						//attacking = true;
 						break;
 					case 1:
 						attacking = false;
